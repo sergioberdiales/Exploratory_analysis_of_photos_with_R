@@ -1,0 +1,22 @@
+---
+title: "Exploratory_analysis_of_photos_with_R"
+author: "Sergio Berdiales"
+date: "2018-02-27
+output: html_document
+---
+
+The objective of this script is to make an exploratory analysis of the photos I took during my holidays at Boston last summer. Something very simple and descriptive.
+
+First of all is to load the packages to use. Besides the "usual suspects" (dplyr, ggplot, tidyr, etc.) I am going to use a very useful package for photographers. Its name is exifR and it is going to help us to extract the metadata from our photos.
+
+```{r message = FALSE, warning = FALSE}
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(lubridate)
+library(tidyr)
+library(xlsx)
+library(readr)
+library(rmarkdown)
+```
+
