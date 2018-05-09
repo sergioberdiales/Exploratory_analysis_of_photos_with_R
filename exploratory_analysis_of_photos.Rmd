@@ -20,7 +20,7 @@ library(readr)
 library(rmarkdown)
 ```
 
-We create a list with all the photos and passed it through the exifr function from the exifR package.
+We create a list with all the photos and passed it through the exifr function from the exifR package. My camera is a Canon 6D and I took all my photos in RAW format. So I set the pattern argument to "*.CR2".
 I save the output file as a csv: 
 
 ```{r message = FALSE, warning = FALSE}
@@ -28,3 +28,48 @@ I save the output file as a csv:
 # exifbos <- exifr(list.cr2)
 # write.csv(exifbos, 'exifbos.csv', row.names = F)
 ```
+
+We import the csv file as a data.frame and see how many observations and variable it has.
+
+```{r message = FALSE, warning = FALSE}
+exifbos <- read_csv("exifbos.csv", col_types = cols(.default = "c"))
+dim(exifbos)
+```
+
+343 variables with information from 1369 photos. I don't need so much information for this analysis. 
+
+If you want to take a look to the information stored in the raw metadata you can visit this web: http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D 
+
+I select just 11 variables from the table and I do some transformations to make the analysis possible.
+```{r message = FALSE, warning = FALSE}
+
+exifbos1 <- select(exifbos,
+SourceFile,
+DateTimeOriginal, 
+Model, 
+LensModel, 
+CanonExposureMode,
+FocusMode,
+MeteringMode,
+ContinuousDrive,
+ShutterSpeed,
+Aperture, 
+ISO)
+
+# Utilizamos la función ymd_hms del paquete lubridate para convertir la variable DateTimeOriginal
+# a formato fecha. Convertimos también las variables Lens, ShutterSpeed, Aperture e ISO a formato factor.
+
+exifbos1$DateTimeOriginal <- ymd_hms(exifbos1$DateTimeOriginal) 
+exifbos1$ShutterSpeed <- as.factor(exifbos1$ShutterSpeed)
+exifbos1$Aperture <- as.factor(exifbos1$Aperture)
+exifbos1$ISO <- as.numeric(exifbos1$ISO)
+exifbos1$CanonExposureMode <- as.factor(exifbos1$CanonExposureMode)
+exifbos1$FocusMode <- as.factor(exifbos1$FocusMode)
+exifbos1$MeteringMode <- as.factor(exifbos1$MeteringMode)
+exifbos1$ContinuousDrive <- as.factor(exifbos1$ContinuousDrive)
+exifbos1$Model <- as.factor(exifbos1$Model)
+exifbos1$LensModel <- as.factor(exifbos1$LensModel)
+```
+
+
+
