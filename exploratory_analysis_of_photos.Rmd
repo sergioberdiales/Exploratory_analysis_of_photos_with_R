@@ -40,7 +40,7 @@ dim(exifbos)
 
 If you want to take a look to the information stored in the raw metadata you can visit this web: http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D 
 
-I select just 11 variables from the table and I do some transformations to make the analysis possible.
+I select just 11 variables from the table and I make some transformations to make the analysis possible.
 ```{r message = FALSE, warning = FALSE}
 
 exifbos1 <- select(exifbos,
@@ -56,8 +56,8 @@ ShutterSpeed,
 Aperture, 
 ISO)
 
-# Utilizamos la función ymd_hms del paquete lubridate para convertir la variable DateTimeOriginal
-# a formato fecha. Convertimos también las variables Lens, ShutterSpeed, Aperture e ISO a formato factor.
+# I use the ymd_hms function from the lubridate package to convert the "DateTimeOriginal" variable to Date class. 
+# I change the class too of the variables "Lens", "ShutterSpeed", "Aperture" and "ISO" to Factor.
 
 exifbos1$DateTimeOriginal <- ymd_hms(exifbos1$DateTimeOriginal) 
 exifbos1$ShutterSpeed <- as.factor(exifbos1$ShutterSpeed)
