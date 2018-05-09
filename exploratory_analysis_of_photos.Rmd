@@ -69,6 +69,13 @@ exifbos1$MeteringMode <- as.factor(exifbos1$MeteringMode)
 exifbos1$ContinuousDrive <- as.factor(exifbos1$ContinuousDrive)
 exifbos1$Model <- as.factor(exifbos1$Model)
 exifbos1$LensModel <- as.factor(exifbos1$LensModel)
+
+# When I tried to generate the html with Knit I got a time zone error
+# I fix this setting the time zone to Europe/Madrid
+Sys.setenv(TZ="Europe/Madrid")
+# https://stackoverflow.com/questions/47314121/r-error-unknown-timezone-with-as-posixct
+
+
 ```
 
 
