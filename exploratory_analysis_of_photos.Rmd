@@ -21,6 +21,7 @@ library(rmarkdown)
 ```
 
 We create a list with all the photos and passed it through the exifr function from the exifR package.
+I save the output file as a csv: 
 
 ```{r message = FALSE, warning = FALSE}
 # list.cr2 <- list.files(pattern = "*.CR2")
