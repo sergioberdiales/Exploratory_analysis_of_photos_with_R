@@ -20,3 +20,10 @@ library(readr)
 library(rmarkdown)
 ```
 
+We create a list with all the photos and passed it through the exifr function from the exifR package.
+
+```{r message = FALSE, warning = FALSE}
+# list.cr2 <- list.files(pattern = "*.CR2")
+# exifbos <- exifr(list.cr2)
+# write.csv(exifbos, 'exifbos.csv', row.names = F)
+```
