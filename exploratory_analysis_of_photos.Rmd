@@ -83,10 +83,10 @@ Sys.setenv(TZ="Europe/Madrid")
 ```
 Photos distribution by day-hour and lense
 
-I plot the photos in a dot plot, with the month days on the x axis, the hours on the y axis and the lenses by color:
+I plot the photos in a scatter plot, with the month days on the x axis, the hours on the y axis and the lenses by color:
 
 ```{r , echo=FALSE}
-ggplot(exifbos1, aes(x = day(DateTimeOriginal), hour(DateTimeOriginal), col = LensModel, alpha = 1)) +
+ggplot(exifbos1, aes(x = as.factor(day(DateTimeOriginal)), as.factor(hour(DateTimeOriginal)), col = LensModel, alpha = 1)) +
 geom_jitter()
 ```
 
