@@ -71,5 +71,8 @@ exifbos1$Model <- as.factor(exifbos1$Model)
 exifbos1$LensModel <- as.factor(exifbos1$LensModel)
 ```
 
-
+We take a look to the data with summary
+```{r }
+summary(exifbos1)
+```
 
