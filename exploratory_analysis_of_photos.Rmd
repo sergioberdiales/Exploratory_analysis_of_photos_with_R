@@ -5,9 +5,9 @@ date: "2018-02-27"
 output: html_document
 ---
 
-The objective of this script is to make an exploratory analysis of the photos I took during my holidays at Boston last summer. Something very simple and descriptive.
+The objective of this script is to make an exploratory analysis of the photos I took during my holidays in Boston last summer. Something very simple and descriptive.
 
-First of all is to load the packages to use. Besides the "usual suspects" (dplyr, ggplot, tidyr, etc.) I am going to use a very useful package for photographers. Its name is exifR and it is going to help us to extract the metadata from our photos.
+First of all we must load the packages we are going to use. Besides the "usual suspects" (dplyr, ggplot, tidyr, etc.) I am going to use a very useful package for photographers. Its name is exifR and it is going to help us extract the metadata from our photos.
 
 ```{r message = FALSE, warning = FALSE}
 library(dplyr)
@@ -20,7 +20,7 @@ library(readr)
 library(rmarkdown)
 ```
 
-We create a list with all the photos and passed it through the exifr function from the exifR package. My camera is a Canon 6D and I took all my photos in RAW format. So I set the pattern argument to "*.CR2".
+We create a list with all the photos and pass it through the exifr function from the exifR package. My camera is a Canon 6D and I took all my photos in RAW format. So, I set the pattern argument to "*.CR2".
 I save the output file as a csv: 
 
 ```{r message = FALSE, warning = FALSE}
@@ -29,7 +29,7 @@ I save the output file as a csv:
 # write.csv(exifbos, 'exifbos.csv', row.names = F)
 ```
 
-We import the csv file as a data.frame and see how many observations and variable it has.
+We import the csv file as a data.frame and see how many observations and variables it has.
 
 ```{r message = FALSE, warning = FALSE}
 exifbos <- read_csv("exifbos.csv", col_types = cols(.default = "c"))
@@ -38,7 +38,7 @@ dim(exifbos)
 
 343 variables with information from 1369 photos. I don't need so much information for this analysis. 
 
-If you want to take a look to the information stored in the raw metadata you can visit this web: http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D 
+If you want to take a look at the information stored in the raw metadata you can visit this web: http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D 
 
 I select just 11 variables from the table and I make some transformations to make the analysis possible.
 ```{r message = FALSE, warning = FALSE}
@@ -57,7 +57,7 @@ Aperture,
 ISO)
 
 # I use the ymd_hms function from the lubridate package to convert the "DateTimeOriginal" variable to Date class. 
-# I change the class too of the variables "Lens", "ShutterSpeed", "Aperture" and "ISO" to Factor.
+# I also change the class of the variables "Lens", "ShutterSpeed", "Aperture" and "ISO" to Factor.
 
 exifbos1$DateTimeOriginal <- ymd_hms(exifbos1$DateTimeOriginal) 
 exifbos1$ShutterSpeed <- as.factor(exifbos1$ShutterSpeed)
@@ -69,8 +69,6 @@ exifbos1$MeteringMode <- as.factor(exifbos1$MeteringMode)
 exifbos1$ContinuousDrive <- as.factor(exifbos1$ContinuousDrive)
 exifbos1$Model <- as.factor(exifbos1$Model)
 exifbos1$LensModel <- as.factor(exifbos1$LensModel)
-
-
 ```
 
 
