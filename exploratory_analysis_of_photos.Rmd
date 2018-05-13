@@ -18,6 +18,7 @@ library(tidyr)
 library(xlsx)
 library(readr)
 library(rmarkdown)
+library(scales)
 ```
 
 We create a list with all the photos and pass it through the exifr function from the exifR package. My camera is a Canon 6D and I took all my photos in RAW format. So, I set the pattern argument to "*.CR2".
@@ -42,6 +43,13 @@ If you want to take a look at the information stored in the raw metadata you can
 
 I select just 11 variables from the table and I make some transformations to make the analysis possible.
 ```{r message = FALSE, warning = FALSE}
+
+# I have a problem related with the time zone when I try to generate the html with Knit. I solve the problem setting the time zone to "Europe/Madrid"
+
+Sys.setenv(TZ="Europe/Madrid")
+
+# https://stackoverflow.com/questions/47314121/r-error-unknown-timezone-with-as-posixct
+
 
 exifbos1 <- select(exifbos,
 SourceFile,
@@ -75,18 +83,36 @@ We take a look to the data with summary
 ```{r }
 summary(exifbos1)
 
-# I have a problem related with the time zone when I try to generate the html with Knit. I solve the problem setting the time zone to "Europe/Madrid"
-
-Sys.setenv(TZ="Europe/Madrid")
-
-# https://stackoverflow.com/questions/47314121/r-error-unknown-timezone-with-as-posixct
 ```
 Photos distribution by day-hour and lense
 
 I plot the photos in a scatter plot, with the month days on the x axis, the hours on the y axis and the lenses by color:
 
 ```{r , echo=FALSE}
-ggplot(exifbos1, aes(x = as.factor(day(DateTimeOriginal)), as.factor(hour(DateTimeOriginal)), col = LensModel, alpha = 1)) +
-geom_jitter()
+
+# We create another column with just the time of the photos, stripping the Date
+#exifbos1 <- exifbos1 %>% mutate(hms = exifbos1$DateTimeOriginal)            
+# https://learnr.wordpress.com/2010/02/25/ggplot2-plotting-dates-hours-and-minutes/
+
+exifbos1$hms <- format(exifbos1$DateTimeOriginal, format = "%H:%M:%S")
+exifbos1$hms <- as.POSIXct(exifbos1$hms, format = "%H:%M:%S")
+
+# Limits of the y-axis
+
+end <- as.POSIXct("2018-05-12 24:00:00")
+start <- as.POSIXct("2018-05-12 09:00:00")
+
+ggplot(exifbos1, aes(x = as.factor(day(DateTimeOriginal)), y = hms, col = LensModel, alpha = 1)) +
+geom_jitter(width = 0.5, height = 0) +
+theme(legend.position ="top") + 
+labs(x = "Days (July - 2018)", y = "Time of the photo") +
+scale_y_datetime(expand = c(0, 0),
+                 limits = c(start, end), 
+                 breaks = seq(start, end, "1 hours"), 
+                 labels = strftime(seq(start, end, "1 hours"), "%H:%S"))
+                 
+                 #labels = date_format("%H:%M"))
+  
+
 ```
 
