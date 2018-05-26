@@ -84,35 +84,127 @@ We take a look to the data with summary
 summary(exifbos1)
 
 ```
-Photos distribution by day-hour and lense
+The summary function already offers us a lot of information about the photos, but we have some problems with certain variables. For example, the 'CanonExposureMode', 'FocusMode', 'MeteringMode' and 'ContinuousDrive' contain numerical codes, which without a description are almost useless. Besides this, the format of the variable 'ShutterSpeed' doesn't correspond to the photo standard. Instead of 1/125 or 1/250 shows the result of the division: '0.008' and '0.004'. Not very convenient!
 
-I plot the photos in a scatter plot, with the month days on the x axis, the hours on the y axis and the lenses by color:
+To solve the first of these problems, the "numerical code" problem, we need the equivalences or descriptions of these numbers. We need a dictionary for each of them. That's easy. We only have to visit this web http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D and look for the description of each of this variables.
 
-```{r , echo=FALSE}
+```{r }
 
-# We create another column with just the time of the photos, stripping the Date
-#exifbos1 <- exifbos1 %>% mutate(hms = exifbos1$DateTimeOriginal)            
-# https://learnr.wordpress.com/2010/02/25/ggplot2-plotting-dates-hours-and-minutes/
+# We create a vector with the "CanonExposureMode" codes,
+CanonExposureMode <- c(0, 1, 2, 3, 4, 5, 6, 7)
 
-exifbos1$hms <- format(exifbos1$DateTimeOriginal, format = "%H:%M:%S")
-exifbos1$hms <- as.POSIXct(exifbos1$hms, format = "%H:%M:%S")
+# and another vector with the correspondent descriptions.
+CanonExposureMode_des <- c("Easy",
+                           "Program AE",
+                           "Shutter speed priority AE",
+                           "Aperture-priority AE",
+                           "Manual",
+                           "Depth-of-field AE",
+                           "M-Dep",
+                           "Bulb")
 
-# Limits of the y-axis
+# We create a data frame with these two vectors
+CanonExposureMode_df <- data.frame(CanonExposureMode, CanonExposureMode_des)
 
-end <- as.POSIXct("2018-05-13 24:00:00")
-start <- as.POSIXct("2018-05-13 09:00:00")
+# We change the 'CanonExposureMode' variable to factor class, so its class be the same
+# as the 'CanonExposureMode' variable from the 'exifbos1' table.
+CanonExposureMode_df$CanonExposureMode <- as.factor(CanonExposureMode_df$CanonExposureMode)
 
-ggplot(exifbos1, aes(x = as.factor(day(DateTimeOriginal)), y = hms, col = LensModel, alpha = 1)) +
-geom_jitter(width = 0.5, height = 0) +
-theme(legend.position ="top") + 
-labs(x = "Days (July - 2018)", y = "Time of the photo") +
-scale_y_datetime(expand = c(0, 0),
-                 limits = c(start, end), 
-                 breaks = seq(start, end, "1 hours"), 
-                 labels = strftime(seq(start, end, "1 hours"), "%H:%S"))
-                 
-                 #labels = date_format("%H:%M"))
-  
+# Finally, we make a left join on the 'exifbos1' table and the 'CanonExposureMode_df' data frame
+exifbos1 <- exifbos1 %>% left_join(CanonExposureMode_df, by = "CanonExposureMode")
+
+# We check the new 'exifbos1' variable 'CanonExposureMode_des'. It looks fine :)
+summary(exifbos1$CanonExposureMode_des)
+
+
+```
+We apply the same process to the variables 'FocusMode', 'MeteringMode' and 'ContinuousDrive':
+
+```{r }
+# 'FocusMode'
+
+# We create a vector with the 'FocusMode' codes,
+FocusMode <- c(0, 1, 2, 3, 4, 5, 6, 16, 256, 512, 519)
+
+# and another vector with the correspondent descriptions.
+FocusMode_des <- c("One-shot AF",
+                   "AI Servo AF",
+                   "AI Focus AF",
+                   "Manual Focus (3)",
+                   "Single",
+                   "Manual Focus (6)",
+                   "Continuous",
+                   "Pan Focus",
+                   "AF + MF",
+                   "Movie Snap Focus",
+                   "Movie Servo AF")
+
+# We create a data frame with these two vectors
+FocusMode_df <- data.frame(FocusMode, FocusMode_des)
+
+# We change the 'FocusMode' variable to factor class, so its class be the same
+# as the 'FocusMode' variable from the 'exifbos1' table.
+FocusMode_df$FocusMode <- as.factor(FocusMode_df$FocusMode)
+
+# Finally, we make a left join on the 'exifbos1' table and the 'FocusMode_df' data frame
+exifbos1 <- exifbos1 %>% left_join(FocusMode_df, by = "FocusMode")
+
+
+
+# 'MeteringMode'
+
+# We create a vector with the 'MeteringMode' codes,
+MeteringMode <- c(0, 1, 2, 3, 4, 5)
+
+# and another vector with the correspondent descriptions.
+MeteringMode_des <- c("Default",
+                      "Spot",
+                      "Average",
+                      "Evaluative",
+                      "Partial",
+                      "Center-weighted average")
+
+# We create a data frame with these two vectors
+MeteringMode_df <- data.frame(MeteringMode, MeteringMode_des)
+
+# We change the 'MeteringMode' variable to factor class, so its class be the same
+# as the 'MeteringMode' variable from the 'exifbos1' table.
+MeteringMode_df$MeteringMode <- as.factor(MeteringMode_df$MeteringMode)
+
+# Finally, we make a left join on the 'exifbos1' table and the 'MeteringMode_df' data frame
+exifbos1 <- exifbos1 %>% left_join(MeteringMode_df, by = "MeteringMode")
+
+
+# ContinuousDrive
+
+# We create a vector with the 'ContinuousDrive' codes,
+ContinuousDrive <- c(0, 1, 2, 3, 4, 5, 6, 9, 10)
+
+# and another vector with the correspondent descriptions.
+ContinuousDrive_des <- c("Single" ,
+                         "Continuous" ,
+                         "Movie" ,
+                         "Continuous, Speed Priority",
+                         "Continuous, Low",
+                         "Continuous, High" ,
+                         "Silent Single" ,
+                         "Single, Silent",
+                         "Continuous, Silent")
+
+# We create a data frame with these two vectors
+ContinuousDrive_df <- data.frame(ContinuousDrive, ContinuousDrive_des)
+
+# We change the 'ContinuousDrive' variable to factor class, so its class be the same
+# as the 'ContinuousDrive' variable from the 'exifbos1' table.
+ContinuousDrive_df$ContinuousDrive <- as.factor(ContinuousDrive_df$ContinuousDrive)
+
+# Finally, we make a left join on the 'exifbos1' table and the 'ContinuousDrive_df' data frame
+exifbos1 <- exifbos1 %>% left_join(ContinuousDrive_df, by = "ContinuousDrive")
+
 
 ```
 
+```{r }
+summary(exifbos1)
+
+```
