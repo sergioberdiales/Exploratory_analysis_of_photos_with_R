@@ -83,9 +83,9 @@ We take a look to the data with summary
 summary(exifbos1)
 
 ```
-The summary function already offers us a lot of information about the photos, but we have some problems with certain variables. For example, the 'CanonExposureMode', 'FocusMode', 'MeteringMode' and 'ContinuousDrive' contain numerical codes, which without a description are almost useless. Besides this, the format of the variable 'ShutterSpeed' doesn't correspond to the photo standard. Instead of 1/125 or 1/250 shows the result of the division: '0.008' and '0.004'. Not very convenient!
+The summary function already offers us a lot of information about the photos, but we have some problems with certain variables. For example, the 'CanonExposureMode', 'FocusMode', 'MeteringMode' and 'ContinuousDrive' contain numerical codes which, without a description, are almost useless. Besides this, the format of the variable 'ShutterSpeed' doesn't correspond to the photo standard. Instead of 1/125 or 1/250 it shows the result of the division: '0.008' and '0.004'. Not very convenient!
 
-To solve the first of these problems, the "numerical code" problem, we need the equivalences or descriptions of these numbers. We need a dictionary for each of them. That's easy. We only have to visit this web http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D and look for the description of each of this variables.
+To solve the first of these problems, the "numerical code" problem, we need the equivalences or descriptions of these numbers. We need a dictionary for each of them. That's easy. We only have to visit this web http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html#CameraInfo6D and look for the description of each of these variables.
 
 ```{r }
 
@@ -105,7 +105,7 @@ CanonExposureMode_des <- c("Easy",
 # We create a data frame with these two vectors
 CanonExposureMode_df <- data.frame(CanonExposureMode, CanonExposureMode_des)
 
-# We change the 'CanonExposureMode' variable to factor class, so its class be the same
+# We change the 'CanonExposureMode' variable to factor class, so its class is the same
 # as the 'CanonExposureMode' variable from the 'exifbos1' table.
 CanonExposureMode_df$CanonExposureMode <- as.factor(CanonExposureMode_df$CanonExposureMode)
 
@@ -217,15 +217,15 @@ We make several transformations to the ShutterSpeed variable in order to get the
 
 ```{r }
 
-# In order to get the denominator of the shutter speeds minor than 1 second we divide 1 between the ShutterSpeed value
+# In order to get the denominator of the shutter speeds which are minor than 1 second we divide 1 by the ShutterSpeed value
 exifbos1 <- exifbos1 %>% mutate(ShutterSpeed_1 = ifelse(as.numeric(ShutterSpeed) < 1, 1/as.numeric(ShutterSpeed), ">=1"))
 
-# We create a new variable 'ShutterSpeed_2" where we copy directly the ShutterSpeed values which are >= 1, and paste 
+# We create a new variable 'ShutterSpeed_2" where we copy the ShutterSpeed values which are >= 1, and paste 
 # as characters "1", "/" and the value from ShutterSpeed_1 where 'ShutterSpeed' is < 1.
 exifbos1 <- exifbos1 %>% mutate(ShutterSpeed_2 = ifelse(as.numeric(ShutterSpeed) < 1, paste0("1", "/", as.character(round(ShutterSpeed_1))), as.character(ShutterSpeed)))
 
 # Finally we eliminate the columns 'ShutterSpeed', 'ShutterSpeed_1' and replace the column name 'ShutterSpeed_2'
-# by 'ShutterSpeed'
+# with 'ShutterSpeed'
 exifbos1 <- exifbos1 %>% select(-ShutterSpeed, -ShutterSpeed_1) %>%
                       rename(ShutterSpeed = ShutterSpeed_2)
 
