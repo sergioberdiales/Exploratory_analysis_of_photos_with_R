@@ -143,7 +143,7 @@ FocusMode_des <- c("One-shot AF",
 # We create a data frame with these two vectors
 FocusMode_df <- data.frame(FocusMode, FocusMode_des)
 
-# We change the 'FocusMode' variable to factor class, so its class be the same
+# We change the 'FocusMode' variable to factor class, so its class is the same
 # as the 'FocusMode' variable from the 'exifbos1' table.
 FocusMode_df$FocusMode <- as.factor(FocusMode_df$FocusMode)
 
@@ -170,7 +170,7 @@ MeteringMode_des <- c("Default",
 # We create a data frame with these two vectors
 MeteringMode_df <- data.frame(MeteringMode, MeteringMode_des)
 
-# We change the 'MeteringMode' variable to factor class, so its class be the same
+# We change the 'MeteringMode' variable to factor class, so its class is the same
 # as the 'MeteringMode' variable from the 'exifbos1' table.
 MeteringMode_df$MeteringMode <- as.factor(MeteringMode_df$MeteringMode)
 
@@ -200,7 +200,7 @@ ContinuousDrive_des <- c("Single" ,
 # We create a data frame with these two vectors
 ContinuousDrive_df <- data.frame(ContinuousDrive, ContinuousDrive_des)
 
-# We change the 'ContinuousDrive' variable to factor class, so its class be the same
+# We change the 'ContinuousDrive' variable to factor class, so its class is the same
 # as the 'ContinuousDrive' variable from the 'exifbos1' table.
 ContinuousDrive_df$ContinuousDrive <- as.factor(ContinuousDrive_df$ContinuousDrive)
 
